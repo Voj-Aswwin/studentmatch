@@ -25,9 +25,14 @@ export function SessionList({ sessions, currentUserId }: { sessions: Session[], 
                 const isOpen = session.status === 'OPEN'
 
                 return (
-                    <Card key={session.id} className={isOpen ? 'border-green-200 bg-green-50' : 'border-gray-200'}>
+                    <Card 
+                        key={session.id} 
+                        className={`opacity-0 animate-fade-in ${isOpen ? 'border-green-200 bg-gradient-to-br from-green-50 to-green-100/50' : 'border-gray-200'} transition-all hover:shadow-lg hover:-translate-y-1 cursor-pointer`}
+                    >
                         <CardHeader>
-                            <CardTitle>{session.topic}</CardTitle>
+                            <CardTitle className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                                {session.topic}
+                            </CardTitle>
                             <div className="text-sm text-gray-500">
                                 {format(new Date(session.date), 'PPP')} at {session.time}
                             </div>
@@ -41,7 +46,9 @@ export function SessionList({ sessions, currentUserId }: { sessions: Session[], 
                             {!isCreator && isOpen && (
                                 <form action={matchSession}>
                                     <input type="hidden" name="sessionId" value={session.id} />
-                                    <Button type="submit" size="sm">Match</Button>
+                                    <Button type="submit" size="sm" className="hover:scale-105 transition-transform">
+                                        Match
+                                    </Button>
                                 </form>
                             )}
                             {isCreator && isOpen && (

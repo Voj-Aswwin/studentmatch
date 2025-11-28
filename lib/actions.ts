@@ -1,6 +1,6 @@
 'use server'
 
-import { signIn } from '@/auth'
+import { signIn, signOut } from '@/auth'
 import { AuthError } from 'next-auth'
 import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
@@ -169,5 +169,18 @@ export async function matchSession(formData: FormData) {
     } catch (error) {
         console.error(error)
         throw error
+    }
+}
+
+export async function signOutAction() {
+    try {
+        await signOut({ redirectTo: '/' })
+    } catch (error) {
+        // Next.js redirects by throwing, so we need to re-throw redirects
+        if (error && typeof error === 'object' && 'type' in error && error.type === 'NEXT_REDIRECT') {
+            throw error
+        }
+        // If signOut doesn't redirect, redirect manually
+        redirect('/')
     }
 }

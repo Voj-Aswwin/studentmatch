@@ -10,6 +10,7 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@gsap/react": "^2.1.2",
     "@hookform/resolvers": "^5.2.2",
     "@prisma/client": "^5.22.0",
     "@radix-ui/react-label": "^2.1.8",
@@ -20,6 +21,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
+    "gsap": "^3.13.0",
     "lucide-react": "^0.555.0",
     "next": "16.0.5",
     "next-auth": "^5.0.0-beta.30",

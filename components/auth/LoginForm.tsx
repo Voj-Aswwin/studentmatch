@@ -15,18 +15,20 @@ export function LoginForm() {
 
   return (
     <form action={dispatch}>
-      <Card className="w-[350px]">
+      <Card className="w-[350px] bg-gradient-to-br from-white to-blue-50/30 border-blue-200/50 shadow-xl opacity-0 animate-scale-in">
         <CardHeader>
-          <CardTitle>Login</CardTitle>
+          <CardTitle className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            Login
+          </CardTitle>
           <CardDescription>Enter your credentials to access your account.</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid w-full items-center gap-4">
-            <div className="flex flex-col space-y-1.5">
+            <div className="flex flex-col space-y-1.5 opacity-0 animate-fade-in animate-delay-100">
               <Label htmlFor="email">Email</Label>
               <Input id="email" name="email" type="email" placeholder="m@example.com" required />
             </div>
-            <div className="flex flex-col space-y-1.5">
+            <div className="flex flex-col space-y-1.5 opacity-0 animate-fade-in animate-delay-200">
               <Label htmlFor="password">Password</Label>
               <div className="relative">
                 <Input 
@@ -49,7 +51,7 @@ export function LoginForm() {
           <div className="flex h-8 items-end space-x-1">
             {errorMessage && (
               <>
-                <p aria-live="polite" className="text-sm text-red-500">
+                <p aria-live="polite" className="text-sm text-red-500 animate-pulse">
                   {errorMessage}
                 </p>
               </>
@@ -68,7 +70,10 @@ function LoginButton() {
   const { pending } = useFormStatus()
  
   return (
-    <Button className="w-full" aria-disabled={pending}>
+    <Button 
+      className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 hover:scale-105 transition-transform" 
+      aria-disabled={pending}
+    >
       {pending ? 'Logging in...' : 'Login'}
     </Button>
   )

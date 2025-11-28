@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { CreateSessionForm } from '@/components/sessions/CreateSessionForm'
 import { SessionList } from '@/components/sessions/SessionList'
 import { Navbar } from '@/components/Navbar'
+import { DashboardClient } from '@/components/dashboard/DashboardClient'
 
 export default async function DashboardPage() {
     const session = await auth()
@@ -32,22 +33,26 @@ export default async function DashboardPage() {
     })
 
     return (
-        <div className="min-h-screen bg-white">
+        <div className="min-h-screen bg-gradient-to-br from-white via-blue-50/20 to-purple-50/20">
             <Navbar />
-            <main className="container mx-auto p-4">
-                <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
-                
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div className="md:col-span-1">
-                        <CreateSessionForm />
-                    </div>
+            <DashboardClient>
+                <main className="container mx-auto p-4">
+                    <h1 className="text-3xl md:text-4xl font-bold mb-8 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                        Dashboard
+                    </h1>
                     
-                    <div className="md:col-span-2">
-                         <h2 className="text-xl font-semibold mb-4">Available Sessions</h2>
-                         <SessionList sessions={openSessions} currentUserId={currentUser.id} />
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div className="md:col-span-1">
+                            <CreateSessionForm />
+                        </div>
+                        
+                        <div className="md:col-span-2">
+                             <h2 className="text-2xl font-semibold mb-6 text-gray-800">Available Sessions</h2>
+                             <SessionList sessions={openSessions} currentUserId={currentUser.id} />
+                        </div>
                     </div>
-                </div>
-            </main>
+                </main>
+            </DashboardClient>
         </div>
     )
 }

@@ -20,9 +20,11 @@ export function CreateSessionForm() {
 
     return (
         <form action={dispatch} className="w-full max-w-md mb-8">
-            <Card>
+            <Card className="bg-gradient-to-br from-white to-blue-50/30 border-blue-200/50 opacity-0 animate-scale-in">
                 <CardHeader>
-                    <CardTitle>Create Study Session</CardTitle>
+                    <CardTitle className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                        Create Study Session
+                    </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <div className="space-y-2">
@@ -54,7 +56,7 @@ export function CreateSessionForm() {
                         <Input id="duration" name="duration" type="number" placeholder="60" />
                     </div>
                     {state?.message && (
-                        <p className={`text-sm ${state.success ? 'text-green-500' : 'text-red-500'}`}>
+                        <p className={`text-sm ${state.success ? 'text-green-500' : 'text-red-500'} animate-pulse`}>
                             {state.message}
                         </p>
                     )}
@@ -70,7 +72,11 @@ export function CreateSessionForm() {
 function SubmitButton() {
     const { pending } = useFormStatus()
     return (
-        <Button type="submit" disabled={pending}>
+        <Button 
+            type="submit" 
+            disabled={pending}
+            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 hover:scale-105 transition-transform"
+        >
             {pending ? 'Creating...' : 'Create Session'}
         </Button>
     )
