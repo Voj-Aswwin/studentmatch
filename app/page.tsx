@@ -161,9 +161,9 @@ export default function LandingPage() {
       <section className="py-32 border-y border-white/5 bg-black">
           <div className="container mx-auto max-w-6xl px-4">
               <div className="grid md:grid-cols-3 gap-12 text-center">
-                  <StatItem ref={(el) => (statRefs.current[0] = el)} value="1000" label="Active Students" />
-                  <StatItem ref={(el) => (statRefs.current[1] = el)} value="500" label="Daily Sessions" />
-                  <StatItem ref={(el) => (statRefs.current[2] = el)} value="95" label="Success Rate (%)" />
+                  <StatItem ref={(el) => { statRefs.current[0] = el }} value="1000" label="Active Students" />
+                  <StatItem ref={(el) => { statRefs.current[1] = el }} value="500" label="Daily Sessions" />
+                  <StatItem ref={(el) => { statRefs.current[2] = el }} value="95" label="Success Rate (%)" />
               </div>
           </div>
       </section>
