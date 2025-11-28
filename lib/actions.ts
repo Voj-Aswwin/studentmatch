@@ -24,7 +24,13 @@ export async function authenticate(
 ) {
   try {
     await signIn('credentials', formData)
+    // If signIn doesn't throw, redirect explicitly
+    redirect('/dashboard')
   } catch (error) {
+    // NextAuth redirects by throwing, so we need to re-throw redirects
+    if (error && typeof error === 'object' && 'type' in error && error.type === 'NEXT_REDIRECT') {
+      throw error
+    }
     if (error instanceof AuthError) {
       switch (error.type) {
         case 'CredentialsSignin':

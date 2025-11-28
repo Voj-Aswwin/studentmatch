@@ -17,9 +17,19 @@ export const authConfig = {
       }
       return true;
     },
+    jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.email = user.email;
+      }
+      return token;
+    },
     session({ session, token }) {
         if (session.user && token.sub) {
             session.user.id = token.sub;
+        }
+        if (token.id && session.user) {
+            session.user.id = token.id as string;
         }
         return session;
     }
