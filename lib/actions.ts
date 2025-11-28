@@ -177,10 +177,12 @@ export async function signOutAction() {
         await signOut({ redirectTo: '/' })
     } catch (error) {
         // Next.js redirects by throwing, so we need to re-throw redirects
-        if (error && typeof error === 'object' && 'type' in error && error.type === 'NEXT_REDIRECT') {
-            throw error
+        if (error && typeof error === 'object' && 'type' in error) {
+            if (error.type === 'NEXT_REDIRECT') {
+                throw error
+            }
         }
-        // If signOut doesn't redirect, redirect manually
+        // If there's any other error, still try to redirect
         redirect('/')
     }
 }

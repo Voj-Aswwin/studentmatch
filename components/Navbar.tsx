@@ -15,7 +15,9 @@ export function Navbar() {
         <Link href="/sessions" className="hover:underline text-gray-700 hover:text-blue-600 transition-colors">Planned Sessions</Link>
       </div>
       <form action={signOutAction}>
-        <Button variant="outline" className="hover:scale-105 transition-transform">Sign Out</Button>
+        <Button variant="outline" className="hover:scale-105 transition-transform" type="submit">
+          Sign Out
+        </Button>
       </form>
     </nav>
   )
