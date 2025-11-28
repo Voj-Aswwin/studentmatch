@@ -1,7 +1,9 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { useActionState } from 'react'
 import { useFormStatus } from 'react-dom'
+import { useRouter } from 'next/navigation'
 import { createSession } from '@/lib/actions'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -15,11 +17,27 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
+const initialState = {
+  message: '',
+  success: false
+}
+
 export function CreateSessionForm() {
-    const [state, dispatch] = useActionState(createSession, undefined)
+    const [state, dispatch] = useActionState(createSession, initialState)
+    const [topicValue, setTopicValue] = useState('')
+    const router = useRouter()
+
+    useEffect(() => {
+        if (state?.success) {
+            // Reset form
+            setTopicValue('')
+            router.refresh()
+        }
+    }, [state?.success, router])
 
     return (
         <form action={dispatch} className="w-full max-w-md mb-8">
+            <input type="hidden" name="topic" value={topicValue} />
             <Card className="bg-gradient-to-br from-white to-blue-50/30 border-blue-200/50 opacity-0 animate-scale-in">
                 <CardHeader>
                     <CardTitle className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
@@ -28,8 +46,8 @@ export function CreateSessionForm() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <div className="space-y-2">
-                        <Label htmlFor="topic">Topic</Label>
-                        <Select name="topic" required>
+                        <Label htmlFor="topic">Topic *</Label>
+                        <Select value={topicValue} onValueChange={setTopicValue}>
                             <SelectTrigger>
                                 <SelectValue placeholder="Select a topic" />
                             </SelectTrigger>
@@ -62,19 +80,19 @@ export function CreateSessionForm() {
                     )}
                 </CardContent>
                 <CardFooter>
-                    <SubmitButton />
+                    <SubmitButton topicValue={topicValue} />
                 </CardFooter>
             </Card>
         </form>
     )
 }
 
-function SubmitButton() {
+function SubmitButton({ topicValue }: { topicValue: string }) {
     const { pending } = useFormStatus()
     return (
         <Button 
             type="submit" 
-            disabled={pending}
+            disabled={pending || !topicValue}
             className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 hover:scale-105 transition-transform"
         >
             {pending ? 'Creating...' : 'Create Session'}

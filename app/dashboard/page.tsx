@@ -32,6 +32,20 @@ export default async function DashboardPage() {
         orderBy: { date: 'asc' }
     })
 
+    // Get user's own sessions (both open and matched)
+    const mySessions = await prisma.session.findMany({
+        where: {
+            creatorId: currentUser.id,
+            date: {
+                gte: today
+            }
+        },
+        include: {
+            creator: { select: { name: true } }
+        },
+        orderBy: { date: 'asc' }
+    })
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-white via-blue-50/20 to-purple-50/20">
             <Navbar />
@@ -46,9 +60,17 @@ export default async function DashboardPage() {
                             <CreateSessionForm />
                         </div>
                         
-                        <div className="md:col-span-2">
-                             <h2 className="text-2xl font-semibold mb-6 text-gray-800">Available Sessions</h2>
-                             <SessionList sessions={openSessions} currentUserId={currentUser.id} />
+                        <div className="md:col-span-2 space-y-8">
+                            {mySessions.length > 0 && (
+                                <div>
+                                    <h2 className="text-2xl font-semibold mb-6 text-gray-800">My Sessions</h2>
+                                    <SessionList sessions={mySessions} currentUserId={currentUser.id} />
+                                </div>
+                            )}
+                            <div>
+                                <h2 className="text-2xl font-semibold mb-6 text-gray-800">Available Sessions</h2>
+                                <SessionList sessions={openSessions} currentUserId={currentUser.id} />
+                            </div>
                         </div>
                     </div>
                 </main>

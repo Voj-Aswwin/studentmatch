@@ -1,13 +1,12 @@
 'use server'
 
-import { signIn, signOut } from '@/auth'
+import { signIn, signOut, auth } from '@/auth'
 import { AuthError } from 'next-auth'
 import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
 import { z } from 'zod'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import { auth } from '@/auth'
 
 // --- Auth Actions ---
 
@@ -169,6 +168,47 @@ export async function matchSession(formData: FormData) {
     } catch (error) {
         console.error(error)
         throw error
+    }
+}
+
+export async function deleteSession(prevState: any, formData: FormData) {
+    const session = await auth()
+    if (!session?.user?.email) {
+        return { message: 'Not authenticated', success: false }
+    }
+
+    const currentUser = await prisma.user.findUnique({ where: { email: session.user.email } })
+    if (!currentUser) {
+        return { message: 'User not found', success: false }
+    }
+
+    const sessionId = formData.get('sessionId') as string
+    if (!sessionId) {
+        return { message: 'Session ID is required', success: false }
+    }
+
+    try {
+        // Verify the session exists and belongs to the user
+        const existingSession = await prisma.session.findUnique({ where: { id: sessionId } })
+        if (!existingSession) {
+            return { message: 'Session not found', success: false }
+        }
+        if (existingSession.creatorId !== currentUser.id) {
+            return { message: 'Not authorized to delete this session', success: false }
+        }
+        if (existingSession.status !== 'OPEN') {
+            return { message: 'Can only delete open sessions', success: false }
+        }
+
+        await prisma.session.delete({
+            where: { id: sessionId }
+        })
+        revalidatePath('/dashboard')
+        revalidatePath('/sessions')
+        return { message: 'Session deleted successfully', success: true }
+    } catch (error) {
+        console.error(error)
+        return { message: error instanceof Error ? error.message : 'Failed to delete session', success: false }
     }
 }
 
