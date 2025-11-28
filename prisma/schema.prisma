@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  contact   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  createdSessions Session[] @relation("CreatedSessions")
+  matchedSessions Session[] @relation("MatchedSessions")
+}
+
+model Session {
+  id            String   @id @default(cuid())
+  topic         String
+  date          DateTime // Store the date of the session
+  time          String   // Store time string like "10:00 AM"
+  duration      Int?     // Duration in minutes, optional
+  status        String   @default("OPEN") // OPEN, MATCHED
+  
+  creatorId     String
+  creator       User     @relation("CreatedSessions", fields: [creatorId], references: [id])
+  
+  matchedUserId String?
+  matchedUser   User?    @relation("MatchedSessions", fields: [matchedUserId], references: [id])
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
